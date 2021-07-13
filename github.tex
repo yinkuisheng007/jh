@@ -1,0 +1,45 @@
+
+
+本地Git仓库和GitHub仓库之间的传输是通过SSH加密的，需要配置本地ssh key并添加到GitHub中本地
+
+$ ssh-keygen -t rsa -C "yinkuisheng@hotmail.com"
+
+一路回车，使用默认值即可
+
+$ ssh-keygen -t rsa -C "yinkuisheng@hotmail.com"
+Generating public/private rsa key pair.
+Enter file in which to save the key (/d/myemacs/.ssh/id_rsa):
+Created directory '/d/myemacs/.ssh'.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /d/myemacs/.ssh/id_rsa
+Your public key has been saved in /d/myemacs/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:mfrlvrVkIiZZSDBQW+7+ppAqFvYoN6snS5zQv08D8yU yinkuisheng@hotmail.com
+The key's randomart image is:
++---[RSA 3072]----+
+|  .o+ .          |
+|     *           |
+|    . o          |
+| .   o . o       |
+|. . o E S        |
+|oo.. * *         |
+|.++ + O o o +    |
+|=o+o + *.+ = .   |
+|=Boo..ooo.+..    |
++----[SHA256]-----+
+
+找到.ssh目录（一般在C:\Users\ljy\.ssh）
+
+里面有id_rsa和id_rsa.pub两个文件，这两个就是SSH Key的秘钥对，
+
+id_rsa是私钥，不能泄露出去，id_rsa.pub是公钥，可以放心地告诉任何人
+
+打开id_rsa.pub，全选复制
+
+
+注意本地仓库文件名不要有中文。
+
+
+
+
