@@ -1,0 +1,301 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{jh}
+%几何专用格式
+\edef\myindent{\the\parindent}
+\RequirePackage{wrapfig}
+\RequirePackage{tkz-euclide}
+\RequirePackage{ctex}
+
+\newenvironment{jhzm}[2]
+{
+	\begin{minipage}{0.45\linewidth}
+		#1
+	\end{minipage}
+	\hfill
+	\begin{minipage}{0.55\linewidth}
+		{	
+			\setlength{\parindent}{\myindent}
+			\noindent {\heiti 证明：}
+			{\small\fangsong
+				#2			
+			}
+		}
+		\vfill
+	\end{minipage}
+}
+
+%这是图形大小可调整的环境
+
+\newenvironment{JHZMA}[3]
+{
+	\begin{minipage}{#1\linewidth}
+		#2
+	\end{minipage}
+	\hfill
+	\begin{minipage}{0.45\linewidth}
+		{	
+			\setlength{\parindent}{\myindent}
+			\noindent {\heiti 证明：}
+			{\small\fangsong
+#3	
+			}
+		}
+		\vfill
+	\end{minipage}
+}
+
+%图文混排
+
+\newenvironment{twhp}[2]
+{
+	\begin{wrapfigure}{l}{9cm}
+		\centering
+		#1
+	\end{wrapfigure}
+	\setlength{\parindent}{\myindent}
+	\noindent {\heiti 证明：}
+	{\small\fangsong
+		#2			
+	}
+}
+
+%分两栏
+\newenvironment{twocol}[2]
+{
+\begin{multicols}{2}	
+	
+#1
+	
+	\setlength{\parindent}{\myindent}
+	\noindent {\heiti 证明：}
+	{\small\fangsong
+		#2			
+	}
+
+\end{multicols}
+}
+
+%仅文字
+
+\newenvironment{wzzm}[2]
+{
+\begin{minipage}{\linewidth}
+	\noindent {\heiti 证明：}
+	{\small\fangsong
+		#1			
+	}
+\end{minipage}
+}
+%定理
+
+\newenvironment{dl}[2]
+{
+	\begin{minipage}{\linewidth}
+		\noindent {\heiti 定理：#1}
+		{\small\fangsong
+			#2			
+		}
+	\end{minipage}
+}
+
+%重新定义平行线符号，竖直改成斜
+\renewcommand{\parallel}{\mathrel{/\mskip-4mu/}}
+
+%为什么？
+
+%用TeX定义一个命令，具有可选参数
+%\WHY{title}
+%\WHY{title}{key}
+\makeatletter
+\def\WHY#1{% Save first argument
+	\def\tempa{#1}
+	\futurelet\next\WHY@i
+}
+\def\WHY@i{%Check brace
+	\ifx\next\bgroup
+		\expandafter\WHY@ii
+	\else
+		\expandafter\WHY@end
+	\fi
+}
+\def\WHY@ii#1{%Two args
+	{\textcolor{red}[\hyperlink{#1}{\tempa}]}
+}
+\def\WHY@end{%Single args
+	\textcolor{red}{[\tempa]}
+}
+\makeatother
+
+%解释对应的说明#1是title,，#2是关键字，#3是内容
+\def\SM#1#2#3{
+	{\heiti #1:}\hypertarget{#2}{#3}
+}
+
+%求两直线交点
+\newcommand\lljd[5]
+{
+	\tkzInterLL(#1,#2)(#3,#4)
+	\tkzGetPoint{#5}
+}
+%
+\def\jiaodian(#1,#2)(#3,#4)(#5){
+	\tkzInterLL(#1,#2)(#3,#4)
+	\tkzGetPoint{#5}	
+}
+%过#1点作#2--#3的垂线,返回#4
+%并绘制、标记
+\def\chuizhi(#1)(#2,#3)(#4){
+	%求O到MN的投影，得到A点
+	\tkzDefPointBy[projection=onto #2--#3](#1)
+	\tkzGetPoint{#4}
+	%\tkzDefLine[perpendicular=through #1](#2,#3)
+	%\tkzGetPoint{T}
+	%\jiaodian(#2,#3)(#1,T)(#4)
+	\tkzMarkRightAngle[blue](#1,#4,#3)
+	\tkzDrawSegments(#1,#4)	
+}
+
+%绘制并标记角平分线
+\def\jiaopfx(#1,#2,#3)(#4){
+	\tkzDefLine[bisector,normed](#1,#2,#3)
+	\tkzGetPoint{Temp}
+	\tkzInterLL(#1,#3)(#2,Temp)
+	\tkzGetPoint{#4}	
+	\tkzDrawSegments(#2,#4)	
+	\tkzMarkAngles[orange,mark=none,size=0.5cm](#1,#2,#4)
+	\tkzMarkAngles[red,mark=none,size=0.5cm](#4,#2,#3)
+}
+%绘制并标记中线
+\def\zhongxian(#1)(#2,#3)(#4){
+	\tkzDefMidPoint(#2,#3) 
+	\tkzGetPoint{#4}
+	\tkzDrawSegments(#1,#4)	
+	\tkzMarkSegments[color=brown,mark=||](#2,#4 #3,#4)
+}
+
+%用 数字#3延长#1--#2,结果存入#4
+\def\yanchang(#1,#2)(#3)(#4){
+	\tkzDefPointBy[homothety=center #1 ratio #3](#2)
+	\tkzGetPoint{#4}
+}
+
+%#1--#2的中垂线
+\def\zhongchuixian(#1,#2)(#3){
+	\tkzDefMidPoint(#1,#2) 
+	\tkzGetPoint{Temp}
+	
+	\tkzDefLine[perpendicular=through Temp](#1,#2)
+	\tkzGetPoint{#3}
+}
+%绘制三角形中垂线
+\def\trizcx(#1,#2,#3)(#4){
+	\zhongchuixian(#1,#2)(Temp1)
+	\zhongchuixian(#2,#3)(Temp2)
+	\zhongchuixian(#3,#1)(Temp3)
+	\tkzDefMidPoint(#1,#2)
+	\tkzGetPoint{Temp4} 
+	\tkzDefMidPoint(#2,#3)
+	\tkzGetPoint{Temp5}
+	\tkzDefMidPoint(#3,#1)
+	\tkzGetPoint{Temp6} 
+	\tkzInterLL(Temp1,Temp4)(Temp2,Temp5)
+	\tkzGetPoint{#4} 
+		
+	\tkzDrawSegments[red](Temp4,#4 Temp5,#4 Temp6,#4)	
+}
+
+%角平分线
+\def\jiaopingfenxian(#1,#2,#3)(#4){
+	\tkzDefLine[bisector,normed](#1,#2,#3)
+	\tkzGetPoint{#4}
+}
+%计算并绘制三角形角平分线
+\def\DrawJPFX(#1,#2,#3)(#4){
+	\jiaopingfenxian(#1,#2,#3)(Temp2)			
+	\jiaopingfenxian(#1,#3,#2)(Temp3)			
+	\jiaopingfenxian(#2,#1,#3)(Temp1)
+	
+	\tkzInterLL(#1,Temp1)(#2,Temp2)
+	\tkzGetPoint{#4} 
+	
+	\tkzDrawSegments(#1,#4 #2,#4 #3,#4)	%\tkzMarkAngles[orange,mark=none,size=0.5cm](#1,#2,#4 #4,#2,#3)	
+}
+%计算三角形重心坐标
+\def\zx(#1,#2,#3)(#4){
+	\tkzDefBarycentricPoint(#1=1,#2=1,#3=1)
+	\tkzGetPoint{#4}
+}
+
+\def\ShowPoint[#1](#2){
+	\tkzDrawPoints(#2)
+	\tkzLabelPoints[#1](#2)
+}
+
+\def\SP(#1){
+	\tkzDrawPoints(#1)
+	\tkzLabelPoints(#1)
+}
+%在#1--#2 上截取#3--#4,从#1开始，结果在#5
+\def\jiequ(#1,#2)(#3,#4)(#5){
+	%计算#3--#4长度，单位厘米
+	\tkzCalcLength[cm](#3,#4)
+	\tkzGetLength{rAC}
+	\tkzCalcLength[cm](#1,#2)
+	\tkzGetLength{rAB}
+	%在#1--#2上取
+	\tkzDefPointBy[homothety=center #1 ratio {\rAC/\rAB}](#2)
+	\tkzGetPoint{#5}
+}
+%求中点
+\def\zhongdian(#1,#2)(#3){
+	\tkzDefMidPoint(#1,#2) 
+	\tkzGetPoint{#3}
+}
+
+%过#3作#1--#2的平行线
+\def\pingxing(#1)(#2,#3)(#4){
+	\tkzDefPointBy[translation= from #2 to #3](#1)	
+	\tkzGetPoint{#4}
+}
+
+%用#1--#2作为方向，在#2延长#3--#4,结果存入#5
+\def\YanChang(#1,#2)(#3,#4)(#5){
+	%
+	\tkzCalcLength[cm](#3,#4)
+	\tkzGetLength{rCD}
+	\tkzCalcLength[cm](#1,#2)
+	\tkzGetLength{rAB}
+	%
+	\tkzDefPointBy[homothety=center #1 ratio {\rCD/\rAB+1}](#2)
+	\tkzGetPoint{#5}	
+}
+
+%用#1风格标注一个角#2,并标记上#3
+\def\MarkAngle[#1](#2)(#3)[#4]{
+	\tkzMarkAngles[#1](#2)					
+	\tkzLabelAngle[#4](#2){#3}
+}	
+
+%
+%\def\because{∵}
+%\def\therefore{∴}
+
+\def\jiequjiaodu(#1,#2,#3)(#4,#5)(#6)
+{
+	\tkzFindAngle(#1,#2,#3)
+	\tkzGetAngle{angleBAC}
+	
+	\tkzDefPointBy[rotation= center #4 angle \angleBAC](#5)
+	\tkzGetPoint{#6}
+}	
+
+%面积符号
+\def\area{\textsl{\textbf{\large S}}}
+
+%平行四边形符号
+\newcommand\parallelogram{%
+	\mathord{\text{%
+			\tikz[baseline] 
+			\draw (0,.1ex) -- (.8em,.1ex) -- (1em,1.6ex) -- (.2em,1.6ex) -- cycle;}}}	
+
+\endinput
