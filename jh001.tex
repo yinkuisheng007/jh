@@ -1,0 +1,99 @@
+
+%\columnseprule=1pt         % 实现插入分隔线
+
+1、在$\Delta$ ABC中，AB=AC，在AB上取D点，AC延长线上取E点，使BD=CE，连DE交BC于F，求证:DF=FE。
+
+\begin{twocol}
+{
+
+	\begin{tikzpicture}
+	\tkzDefPoint(0,0){B} 
+	\tkzDefPoint(4,0){C}
+	\tkzDefPoint(2,5){A}
+	
+	\tkzDrawPoints(A,B,C) 
+	\tkzDrawSegments(A,B B,C C,A)
+	\ShowPoint[above](A)
+	
+	\tkzLabelPoints[left](B)
+	\tkzLabelPoints(C)
+	%BA之间的点，离B 0.3
+	\tkzDefPointBy[homothety=center B ratio 0.3](A)
+	\tkzGetPoint{D}
+	%AC之间的点，离C 1.3
+	\tkzDefPointBy[homothety=center A ratio 1.3](C)
+	\tkzGetPoint{E}
+	
+	\tkzDrawPoints(D) 
+	\tkzLabelPoints[left](D)%above/below + left/right
+	
+	\tkzDrawPoints(E) 
+	\tkzLabelPoints(E)
+	
+	\tkzDrawSegments(D,E)
+	\tkzDrawSegments(C,E)
+
+	%DE和BC之间交点
+	%\tkzInterLL(D,E)(B,C)
+	%\tkzGetPoint{F}
+	%\lljd{D}{E}{B}{C}{F}
+	\jiaodian(D,E)(B,C)(F)
+	
+	\tkzDrawPoints(F) 
+	\tkzLabelPoints[above](F)
+	%作辅助线
+	\tkzDefPointBy[translation= from A to C](D)	%过D作AC的平行线
+	\tkzGetPoint{H}
+	\tkzInterLL(D,H)(B,C)%DH和BC交点
+	\tkzGetPoint{G}
+	\tkzDrawSegments[red,dashed](D,G)
+	\tkzDrawPoints(G) 
+	\tkzLabelPoints[red](G)	
+	
+	\tkzMarkAngles[orange,mark=none,size=0.5cm](G,B,D D,G,B A,C,B)
+	\tkzMarkAngles[red,mark=none,size=0.5cm](G,D,F C,E,F)
+	\tkzMarkAngles[green,mark=none,size=0.3cm](F,G,D F,C,E)
+	
+	\tkzMarkSegments[blue](D,G C,E D,B)
+	
+\end{tikzpicture}
+}
+{
+	
+	
+作辅助线 DG平行AE，交BC于G。
+
+因为DG平行AE，
+
+所以$\angle$DGB=$\angle$ACB。\WHY{同位角相等}\hfill(1)
+
+因为$\triangle$ABC为等腰三角形
+
+所以$\angle$ABC=$\angle$ACB\hfill(2)
+
+所以由(1)(2)得出
+
+$\angle$ABC=$\angle$DGB\WHY{等量相等}
+
+所以$\triangle$BDG也是等腰三角形。
+
+所以BD=DG。\WHY{等腰三角形两腰相等}\hfill (3)
+
+根据条件：BD=CE和(3)得出：DG=CE。\hfill (4)
+
+由DG平行AE还可得出：
+
+$\angle$GDF=$\angle$FEC，
+$\angle$DGF=$\angle$FCE\WHY{平行线内错角相等}\hfill(5)
+
+
+由(4)(5)可以得出
+
+$\triangle$DGF$\cong$$\triangle$FCE\WHY{角边角}
+
+所以DF=FE。\WHY{全等三角形对应边相等}
+
+}
+
+
+\end{twocol}
